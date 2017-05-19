@@ -37,6 +37,10 @@ series_analisadas <- series %>%
 ```
 
 ```{r}
-unique(series_analisadas$series_name)
+#group_by(series_analisadas, series_name) %>%
+  ggplot(series_analisadas, aes(x = series_name, y = UserRating, color = series_name)) +
+  geom_point(alpha = 0.1) +
+  geom_jitter() +
+  geom_boxplot()
 ```
 
