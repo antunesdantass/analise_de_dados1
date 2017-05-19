@@ -1,0 +1,42 @@
+---
+title: "Checkpoint 1"
+author: "Antunes Dantas"
+date: "19 de maio de 2017"
+output: html_document
+---
+
+```{r}
+install.packages(c("dplyr", "tidyr", "ggplot2"))
+install.packages("readr")
+library("ggplot2")
+library("dplyr")
+library("tidyr")
+library("readr")
+```
+
+Importando os dados
+
+```{r}
+setwd('/home/antunesdds/Documentos/AD1/Problema 1/')
+series <- read.csv('series_from_imdb.csv')
+```
+
+Mostrando series disponiveis
+
+```{r}
+unique(series$series_name) %>%
+  sort()
+```
+
+As séries que serão utilizadas nesse estudo serão: Friends, The Simpsons, How I Met Your Mother, Modern Family
+Para facilitar a manipulação dos dados, criarei um novo conjunto dos dados contendo apenas os dados das série em estudo.
+
+```{r}
+series_analisadas <- series %>% 
+  filter(series_name %in% c("Friends", "Modern Family", "The Simpsons", "How I Met Your Mother"))
+```
+
+```{r}
+unique(series_analisadas$series_name)
+```
+
