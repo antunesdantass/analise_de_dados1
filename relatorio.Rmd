@@ -1,13 +1,13 @@
 ---
-title: "Dados Sobre S??ries de TV - Checkpoin 1"
+title: "Dados Sobre Séries de TV - Checkpoin 1"
 author: "Antunes Dantas"
 output: html_document
 ---
 
-Atividade proposta na disciplina An??lise de Dados I da Universidade Federal de Campina Grande, este estudo prop??e analisar dados de s??ries de TV obtidos do IMDb.
+Atividade proposta na disciplina Análise de Dados I da Universidade Federal de Campina Grande, este estudo propõe analisar dados de séries de TV obtidos do IMDb, um banco de dados online de filmes e séries.
 
 ```{r}
-# Instalando os pacotes necess??rios
+# Instalando os pacotes necessários
 install.packages(c("dplyr", "tidyr", "ggplot2", "readr"))
 library("ggplot2")
 library("dplyr")
@@ -22,23 +22,29 @@ setwd('/Users/antunesdantas/Documents/Projetos/analise_de_dados1/')
 series <- read.csv('series_from_imdb.csv')
 ```
 
-O banco de dados utilizado cont??m 31 s??ries, escolhidas aleatoriamente:
+O banco de dados utilizado contém 31 séries, escolhidas aleatoriamente:
 
 ```{r}
-# Mostrando as s??ries dispon??veis
+# Mostrando as séries disponíveis
 unique(series$series_name) %>%
   sort()
 ```
 
-Dentre essas s??ries, escolhi quatro para analisar. Escolhi as quatro s??ries de sitcom dispon??veis: Friends, How I Met Your Mother, Modern Family e The Simpons. Escolhi essas s??ries por terem um formato semelhante: com??dia de vinte minutos de dura????o.
+Dentre essas séries, escolhi quatro para analisar: Friends, How I Met Your Mother, Modern Family e The Simpons. Escolhi essas por terem um formato semelhante: comédia com vinte minutos de duração.
 
 ```{r}
-# Criando um novo conjunto de dados apenas com as s??ries em estudo
+# Criando um novo conjunto de dados apenas com as séries em estudo
 series_analisadas <- series %>% 
   filter(series_name %in% c("Friends", "Modern Family", "The Simpsons", "How I Met Your Mother"))
 ```
 
+Como falado anteriormente, o conjunto de dados foi baixado do IMDb. Então, temos disponível as seguintes informações de cada série:
 
+```{r}
+names(series_analisadas)
+```
+
+Como mostrado acima, temos disponível todos os episódios lançados até a data de publicação desse estudo (20 de Maio de 2017) das séries, também uma média da nota dada pelos usuários do IMDb para cada episódio.
 
 ```{r}
 grafico_series <- ggplot(series_analisadas, aes(x = series_name, y = UserRating, color = series_name)) +
