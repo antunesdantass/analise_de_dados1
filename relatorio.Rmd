@@ -1,46 +1,55 @@
 ---
-title: "Checkpoint 1"
+title: "Dados Sobre S??ries de TV - Checkpoin 1"
 author: "Antunes Dantas"
-date: "19 de maio de 2017"
 output: html_document
 ---
 
+Atividade proposta na disciplina An??lise de Dados I da Universidade Federal de Campina Grande, este estudo prop??e analisar dados de s??ries de TV obtidos do IMDb.
+
 ```{r}
-install.packages(c("dplyr", "tidyr", "ggplot2"))
-install.packages("readr")
+# Instalando os pacotes necess??rios
+install.packages(c("dplyr", "tidyr", "ggplot2", "readr"))
 library("ggplot2")
 library("dplyr")
 library("tidyr")
 library("readr")
 ```
 
-Importando os dados
 
 ```{r}
-setwd('/home/antunesdds/Documentos/AD1/Problema 1/')
+# Importando o arquivo com os dados
+setwd('/Users/antunesdantas/Documents/Projetos/analise_de_dados1/')
 series <- read.csv('series_from_imdb.csv')
 ```
 
-Mostrando series disponiveis
+O banco de dados utilizado cont??m 31 s??ries, escolhidas aleatoriamente:
 
 ```{r}
+# Mostrando as s??ries dispon??veis
 unique(series$series_name) %>%
   sort()
 ```
 
-As séries que serão utilizadas nesse estudo serão: Friends, The Simpsons, How I Met Your Mother, Modern Family
-Para facilitar a manipulação dos dados, criarei um novo conjunto dos dados contendo apenas os dados das série em estudo.
+Dentre essas s??ries, escolhi quatro para analisar. Escolhi as quatro s??ries de sitcom dispon??veis: Friends, How I Met Your Mother, Modern Family e The Simpons. Escolhi essas s??ries por terem um formato semelhante: com??dia de vinte minutos de dura????o.
 
 ```{r}
+# Criando um novo conjunto de dados apenas com as s??ries em estudo
 series_analisadas <- series %>% 
   filter(series_name %in% c("Friends", "Modern Family", "The Simpsons", "How I Met Your Mother"))
 ```
 
+
+
 ```{r}
-#group_by(series_analisadas, series_name) %>%
-  ggplot(series_analisadas, aes(x = series_name, y = UserRating, color = series_name)) +
+grafico_series <- ggplot(series_analisadas, aes(x = series_name, y = UserRating, color = series_name)) +
   geom_point(alpha = 0.1) +
-  geom_jitter() +
+  geom_jitter()
+
+grafico_series
+```
+
+```{r}
+grafico_series +
   geom_boxplot()
 ```
 
