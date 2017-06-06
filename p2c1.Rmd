@@ -1,0 +1,61 @@
+---
+title: "Problema 2 - Checkpoint 1"
+author: "Antunes Dantas"
+output: html_notebook
+---
+
+Friends, How I Met Your Mother, Modern Family e The Simpons. Qual dessas séries é a mais bem avaliada no IMDb (serviço onde usuários podem avaliar séries e filmes)?
+
+Para isso, vou usar um banco de dados obtido através do serviço e mostrar um gráfico de ponto onde cada ponto representa a nota de um episódio. Neste primeiro momento, não vamos separar os dados por temporada, apenas por série. No eixo x, o nome da série. No y, as notas dos usuários.
+
+```{r}
+library(plotly)
+library(readr)
+series <- read_csv('series_from_imdb.csv')
+seriesAnalizadas <- series %>% 
+  filter(series_name %in% c("Friends", "Modern Family", "The Simpsons", "How I Met Your Mother")) %>%
+  group_by(series_name) %>%
+  arrange(series_ep)
+
+modernFamily = plot_ly(data = filter(seriesAnalizadas, series_name == "Modern Family"),
+       x = ~series_ep,
+       y = ~UserRating,
+       type = "scatter",
+       text = ~paste("Nome do Episódio: ", Episode,
+                     "<br>Número do Episódio: ", season_ep,
+                     "<br>Temporada: ", season)
+       )
+
+friends = plot_ly(data = filter(seriesAnalizadas, series_name == "Friends"),
+       x = ~series_ep,
+       y = ~UserRating,
+       type = "scatter",
+       text = ~paste("Nome do Episódio: ", Episode,
+                     "<br>Número do Episódio: ", season_ep,
+                     "<br>Temporada: ", season)
+       )
+
+howIMetYourMother = plot_ly(data = filter(seriesAnalizadas, series_name == "How I Met Your Mother"),
+       x = ~series_ep,
+       y = ~UserRating,
+       type = "scatter",
+       text = ~paste("Nome do Episódio: ", Episode,
+                     "<br>Número do Episódio: ", season_ep,
+                     "<br>Temporada: ", season)
+       )
+
+theSimpsons = plot_ly(data = filter(seriesAnalizadas, series_name == "The Simpsons"),
+       x = ~series_ep,
+       y = ~UserRating,
+       type = "scatter",
+       text = ~paste("Nome do Episódio: ", Episode,
+                     "<br>Número do Episódio: ", season_ep,
+                     "<br>Temporada: ", season)
+       )
+
+subplot(nrows = 4, modernFamily, friends, howIMetYourMother, theSimpsons)
+
+theSimpsons
+
+```
+
