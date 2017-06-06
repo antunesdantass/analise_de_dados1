@@ -9,7 +9,6 @@
 <meta name="generator" content="pandoc" />
 
 
-<meta name="author" content="Antunes Dantas" />
 
 
 <title>Problema 2 - Checkpoint 1</title>
@@ -143,7 +142,7 @@ $(document).ready(function () {
 </style>
 <script>
 $(document).ready(function () {
-  window.initializeSourceEmbed("p2c1.Rmd");
+  window.initializeSourceEmbed("P2C1.Rmd");
   window.initializeCodeFolding("show" === "show");
 });
 </script>
@@ -168,27 +167,30 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">Problema 2 - Checkpoint 1</h1>
-<h4 class="author"><em>Antunes Dantas</em></h4>
 
 </div>
 
 
 <!-- rnb-text-begin -->
-<p>Friends, How I Met Your Mother, Modern Family e The Simpons. Qual dessas séries é a mais bem avaliada no IMDb (serviço onde usuários podem avaliar séries e filmes)?</p>
-<p>Para responder essa pergunta, vou usar um banco de dados obtido através do serviço e mostrar um gráfico de ponto onde cada ponto representa a nota média de um episódio. Neste primeiro momento, não vamos separar os dados por temporada, apenas por série. No eixo x, o episódio da série. No y, as notas dos usuários.</p>
-<!-- rnb-text-end -->
-<!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3VicGxvdChucm93cyA9IDQsIG1vZGVybkZhbWlseSwgZnJpZW5kcywgaG93SU1ldFlvdXJNb3RoZXIsIHRoZVNpbXBzb25zKVxuYGBgIn0= -->
-<pre class="r"><code>subplot(nrows = 4, modernFamily, friends, howIMetYourMother, theSimpsons)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5cbmBgYCJ9 -->
+<pre class="r"><code>library(tidyverse)
+</code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiTG9hZGluZyB0aWR5dmVyc2U6IHRpYmJsZVxuTG9hZGluZyB0aWR5dmVyc2U6IHB1cnJyXG5Db25mbGljdHMgd2l0aCB0aWR5IHBhY2thZ2VzIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLVxuZmlsdGVyKCk6IGRwbHlyLCBzdGF0c1xubGFnKCk6ICAgIGRwbHlyLCBzdGF0c1xuIn0= -->
+<pre><code>Loading tidyverse: tibble
+Loading tidyverse: purrr
+Conflicts with tidy packages ---------------------------------------------------------------
+filter(): dplyr, stats
+lag():    dplyr, stats</code></pre>
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
-<p>Como pode ser visto, Friends possui uma grande quantidade de pontos distribuídos próximos uns aos outros. No lado oposto, The Simpons possui pontos distribuídos em várias faixas, indicando uma variedade na qualidade de cada episódio. Com estes gráficos, é seguro afirmar que Friends é a série mais bem avaliada. A nota mais alta é de um episódio dessa série, seus pontos tem uma distribuição muito próxima (grande parte dos episódios com nota entre oito e nove), a mediana também é a mais alta.</p>
+<p>Séries de TV</p>
 <!-- rnb-text-end -->
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiUHJvYmxlbWEgMiAtIENoZWNrcG9pbnQgMSIKYXV0aG9yOiAiQW50dW5lcyBEYW50YXMiCm91dHB1dDoKICBodG1sX2RvY3VtZW50OiBkZWZhdWx0CiAgaHRtbF9ub3RlYm9vazogZGVmYXVsdAotLS0KCkZyaWVuZHMsIEhvdyBJIE1ldCBZb3VyIE1vdGhlciwgTW9kZXJuIEZhbWlseSBlIFRoZSBTaW1wb25zLiBRdWFsIGRlc3NhcyBzw6lyaWVzIMOpIGEgbWFpcyBiZW0gYXZhbGlhZGEgbm8gSU1EYiAoc2VydmnDp28gb25kZSB1c3XDoXJpb3MgcG9kZW0gYXZhbGlhciBzw6lyaWVzIGUgZmlsbWVzKT8KClBhcmEgcmVzcG9uZGVyIGVzc2EgcGVyZ3VudGEsIHZvdSB1c2FyIHVtIGJhbmNvIGRlIGRhZG9zIG9idGlkbyBhdHJhdsOpcyBkbyBzZXJ2acOnbyBlIG1vc3RyYXIgdW0gZ3LDoWZpY28gZGUgcG9udG8gb25kZSBjYWRhIHBvbnRvIHJlcHJlc2VudGEgYSBub3RhIG3DqWRpYSBkZSB1bSBlcGlzw7NkaW8uIE5lc3RlIHByaW1laXJvIG1vbWVudG8sIG7Do28gdmFtb3Mgc2VwYXJhciBvcyBkYWRvcyBwb3IgdGVtcG9yYWRhLCBhcGVuYXMgcG9yIHPDqXJpZS4gTm8gZWl4byB4LCBvIGVwaXPDs2RpbyBkYSBzw6lyaWUuIE5vIHksIGFzIG5vdGFzIGRvcyB1c3XDoXJpb3MuCgpgYGB7ciBpbmNsdWRlPUZBTFNFfQpsaWJyYXJ5KHBsb3RseSkKbGlicmFyeShyZWFkcikKc2VyaWVzIDwtIHJlYWRfY3N2KCdzZXJpZXNfZnJvbV9pbWRiLmNzdicpCnNlcmllc0FuYWxpemFkYXMgPC0gc2VyaWVzICU+JSAKICBmaWx0ZXIoc2VyaWVzX25hbWUgJWluJSBjKCJGcmllbmRzIiwgIk1vZGVybiBGYW1pbHkiLCAiVGhlIFNpbXBzb25zIiwgIkhvdyBJIE1ldCBZb3VyIE1vdGhlciIpKSAlPiUKICBncm91cF9ieShzZXJpZXNfbmFtZSkgJT4lCiAgYXJyYW5nZShzZXJpZXNfZXApCgptb2Rlcm5GYW1pbHkgPSBwbG90X2x5KGRhdGEgPSBmaWx0ZXIoc2VyaWVzQW5hbGl6YWRhcywgc2VyaWVzX25hbWUgPT0gIk1vZGVybiBGYW1pbHkiKSwKICAgICAgIHggPSB+c2VyaWVzX2VwLAogICAgICAgeSA9IH5Vc2VyUmF0aW5nLAogICAgICAgdGV4dCA9IH5wYXN0ZSgiTm9tZSBkbyBFcGlzw7NkaW86ICIsIEVwaXNvZGUsCiAgICAgICAgICAgICAgICAgICAgICI8YnI+TsO6bWVybyBkbyBFcGlzw7NkaW86ICIsIHNlYXNvbl9lcCwKICAgICAgICAgICAgICAgICAgICAgIjxicj5UZW1wb3JhZGE6ICIsIHNlYXNvbikKICAgICAgICkgJT4lCiAgYWRkX21hcmtlcnMobmFtZSA9IH4iTW9kZXJuIEZhbWlseSIpCgpmcmllbmRzID0gcGxvdF9seShkYXRhID0gZmlsdGVyKHNlcmllc0FuYWxpemFkYXMsIHNlcmllc19uYW1lID09ICJGcmllbmRzIiksCiAgICAgICB4ID0gfnNlcmllc19lcCwKICAgICAgIHkgPSB+VXNlclJhdGluZywKICAgICAgIHRleHQgPSB+cGFzdGUoIk5vbWUgZG8gRXBpc8OzZGlvOiAiLCBFcGlzb2RlLAogICAgICAgICAgICAgICAgICAgICAiPGJyPk7Dum1lcm8gZG8gRXBpc8OzZGlvOiAiLCBzZWFzb25fZXAsCiAgICAgICAgICAgICAgICAgICAgICI8YnI+VGVtcG9yYWRhOiAiLCBzZWFzb24pCiAgICAgICApICU+JQogIGFkZF9tYXJrZXJzKG5hbWUgPSB+IkZyaWVuZHMiKQoKaG93SU1ldFlvdXJNb3RoZXIgPSBwbG90X2x5KGRhdGEgPSBmaWx0ZXIoc2VyaWVzQW5hbGl6YWRhcywgc2VyaWVzX25hbWUgPT0gIkhvdyBJIE1ldCBZb3VyIE1vdGhlciIpLAogICAgICAgeCA9IH5zZXJpZXNfZXAsCiAgICAgICB5ID0gflVzZXJSYXRpbmcsCiAgICAgICB0ZXh0ID0gfnBhc3RlKCJOb21lIGRvIEVwaXPDs2RpbzogIiwgRXBpc29kZSwKICAgICAgICAgICAgICAgICAgICAgIjxicj5Ow7ptZXJvIGRvIEVwaXPDs2RpbzogIiwgc2Vhc29uX2VwLAogICAgICAgICAgICAgICAgICAgICAiPGJyPlRlbXBvcmFkYTogIiwgc2Vhc29uKQogICAgICAgKSAlPiUKICBhZGRfbWFya2VycyhuYW1lID0gfiJIb3cgSSBNZXQgWW91ciBNb3RoZXIiKQoKdGhlU2ltcHNvbnMgPSBwbG90X2x5KGRhdGEgPSBmaWx0ZXIoc2VyaWVzQW5hbGl6YWRhcywgc2VyaWVzX25hbWUgPT0gIlRoZSBTaW1wc29ucyIpLAogICAgICAgeCA9IH5zZXJpZXNfZXAsCiAgICAgICB5ID0gflVzZXJSYXRpbmcsCiAgICAgICB0ZXh0ID0gfnBhc3RlKCJOb21lIGRvIEVwaXPDs2RpbzogIiwgRXBpc29kZSwKICAgICAgICAgICAgICAgICAgICAgIjxicj5Ow7ptZXJvIGRvIEVwaXPDs2RpbzogIiwgc2Vhc29uX2VwLAogICAgICAgICAgICAgICAgICAgICAiPGJyPlRlbXBvcmFkYTogIiwgc2Vhc29uKQogICAgICAgKSAlPiUKICBhZGRfbWFya2VycyhuYW1lID0gfiJUaGUgU2ltcHNvbnMiKQpgYGAKCmBgYHtyfQpzdWJwbG90KG5yb3dzID0gNCwgbW9kZXJuRmFtaWx5LCBmcmllbmRzLCBob3dJTWV0WW91ck1vdGhlciwgdGhlU2ltcHNvbnMpCmBgYAoKQ29tbyBwb2RlIHNlciB2aXN0bywgRnJpZW5kcyBwb3NzdWkgdW1hIGdyYW5kZSBxdWFudGlkYWRlIGRlIHBvbnRvcyBkaXN0cmlidcOtZG9zIHByw7N4aW1vcyB1bnMgYW9zIG91dHJvcy4gTm8gbGFkbyBvcG9zdG8sIFRoZSBTaW1wb25zIHBvc3N1aSBwb250b3MgZGlzdHJpYnXDrWRvcyBlbSB2w6FyaWFzIGZhaXhhcywgaW5kaWNhbmRvIHVtYSB2YXJpZWRhZGUgbmEgcXVhbGlkYWRlIGRlIGNhZGEgZXBpc8OzZGlvLgpDb20gZXN0ZXMgZ3LDoWZpY29zLCDDqSBzZWd1cm8gYWZpcm1hciBxdWUgRnJpZW5kcyDDqSBhIHPDqXJpZSBtYWlzIGJlbSBhdmFsaWFkYS4gQSBub3RhIG1haXMgYWx0YSDDqSBkZSB1bSBlcGlzw7NkaW8gZGVzc2Egc8OpcmllLCBzZXVzIHBvbnRvcyB0ZW0gdW1hIGRpc3RyaWJ1acOnw6NvIG11aXRvIHByw7N4aW1hIChncmFuZGUgcGFydGUgZG9zIGVwaXPDs2Rpb3MgY29tIG5vdGEgZW50cmUgb2l0byBlIG5vdmUpLCBhIG1lZGlhbmEgdGFtYsOpbSDDqSBhIG1haXMgYWx0YS4=</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUHJvYmxlbWEgMiAtIENoZWNrcG9pbnQgMSIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKYGBge3J9CmxpYnJhcnkodGlkeXZlcnNlLCBwbG90bHkpCmBgYAoKU8OpcmllcyBkZSBUViA=</div>
 
 
 

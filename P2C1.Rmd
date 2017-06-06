@@ -1,0 +1,10 @@
+---
+title: "Problema 2 - Checkpoint 1"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse, plotly)
+```
+
+Séries de TV 
