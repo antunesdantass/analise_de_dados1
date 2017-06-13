@@ -1,0 +1,64 @@
+---
+title: "Problema 2 - Checkpoint 1"
+author: "Antunes Dantas"
+output:
+  html_document: default
+  html_notebook: default
+---
+
+Friends, How I Met Your Mother, Modern Family e The Simpons. Qual dessas séries é a mais bem avaliada no IMDb (serviço onde usuários podem avaliar séries e filmes)?
+
+Para responder essa pergunta, vou usar um banco de dados obtido através do serviço e mostrar um gráfico de ponto onde cada ponto representa a nota média de um episódio. Neste primeiro momento, não vamos separar os dados por temporada, apenas por série. No eixo x, o episódio da série. No y, as notas dos usuários.
+
+```{r include=FALSE}
+library(plotly)
+library(readr)
+series <- read_csv('series_from_imdb.csv')
+seriesAnalizadas <- series %>% 
+  filter(series_name %in% c("Friends", "Modern Family", "The Simpsons", "How I Met Your Mother")) %>%
+  group_by(series_name) %>%
+  arrange(series_ep)
+
+modernFamily = plot_ly(data = filter(seriesAnalizadas, series_name == "Modern Family"),
+       x = ~series_ep,
+       y = ~UserRating,
+       text = ~paste("Nome do Episódio: ", Episode,
+                     "<br>Número do Episódio: ", season_ep,
+                     "<br>Temporada: ", season)
+       ) %>%
+  add_markers(name = ~"Modern Family")
+
+friends = plot_ly(data = filter(seriesAnalizadas, series_name == "Friends"),
+       x = ~series_ep,
+       y = ~UserRating,
+       text = ~paste("Nome do Episódio: ", Episode,
+                     "<br>Número do Episódio: ", season_ep,
+                     "<br>Temporada: ", season)
+       ) %>%
+  add_markers(name = ~"Friends")
+
+howIMetYourMother = plot_ly(data = filter(seriesAnalizadas, series_name == "How I Met Your Mother"),
+       x = ~series_ep,
+       y = ~UserRating,
+       text = ~paste("Nome do Episódio: ", Episode,
+                     "<br>Número do Episódio: ", season_ep,
+                     "<br>Temporada: ", season)
+       ) %>%
+  add_markers(name = ~"How I Met Your Mother")
+
+theSimpsons = plot_ly(data = filter(seriesAnalizadas, series_name == "The Simpsons"),
+       x = ~series_ep,
+       y = ~UserRating,
+       text = ~paste("Nome do Episódio: ", Episode,
+                     "<br>Número do Episódio: ", season_ep,
+                     "<br>Temporada: ", season)
+       ) %>%
+  add_markers(name = ~"The Simpsons")
+```
+
+```{r}
+subplot(nrows = 4, modernFamily, friends, howIMetYourMother, theSimpsons)
+```
+
+Como pode ser visto, Friends possui uma grande quantidade de pontos distribuídos próximos uns aos outros. No lado oposto, The Simpons possui pontos distribuídos em várias faixas, indicando uma variedade na qualidade de cada episódio.
+Com estes gráficos, é seguro afirmar que Friends é a série mais bem avaliada. A nota mais alta é de um episódio dessa série, seus pontos tem uma distribuição muito próxima (grande parte dos episódios com nota entre oito e nove), a mediana também é a mais alta.
