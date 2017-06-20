@@ -31,4 +31,8 @@ shinyServer(function(input, output) {
       )
     })
   
+  output$sumario <- renderPlotly({
+    plot_ly(data = filter(series, series_name %in% input$series_name),
+    )
+  })
 })

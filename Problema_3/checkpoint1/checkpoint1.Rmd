@@ -18,6 +18,11 @@ library(tibble)
 source("funcoes_plot.R")
 ```
 
+Filme é algo que todo mundo, ou quase todo mundo, gosta. Final de semana em casa sempre combina com aquele filme que você tanto queria assistir. 
+Quanto mais assistimos, mais vamos conhecendo a indústria cinematográfica, nos apegamos a certos atores e começamos a acompanhar o trabalho desses mais de perto. Pensando nisso, esse trabalho propõe analisar o trabalho de uma atriz que é, certamente, conhecida por muita gente.
+Famosa principalmente por seu trabalho em Star Wars como Padmé Amidala e Nina Sayers em Cisne Negro, Natalie Portman tem tido cada vez mais espaço no em Hollywood.
+Extraindo dados do site Rotten Tomatoes, um site de críticas de filme, vamos analisar o trabalho dela.
+
 ```{r}
 from_page <- read_html("https://www.rottentomatoes.com/celebrity/natalie_portman/") %>% 
     html_node("#filmographyTbl") %>% # A sintaxe da expressão é de um seletor à lá JQuery: https://rdrr.io/cran/rvest/man/html_nodes.html 
@@ -33,12 +38,31 @@ filmes = from_page %>%
     filter(`BOX OFFICE` >= 1) # Tem dois filmes que não parecem ter sido lançados no mundo todo
 ```
 
+Primeiro, vamos descrever um pouco os dados que vamos trabalhar.
+
 ```{r}
-filmes %>%
-  ggplot(aes(x = RATING, y = `BOX OFFICE`)) +
-    geom_point()
+names(filmes)
 ```
 
+O "Rating" é a nota atribuída a um filme, sendo calculado de acordo com algumas métricas do Rotten Tomatoes. O "Title" se refere ao título do filme, "Credit" o papel da atriz nele, "Box Office" é o valor que foi arrecadado pelo filme, e "Year" o ano de lançamento.
+Cada observação nos nossos dados se refere a um filme.
+
+Primeiro, vamos criar um gráfico de pontos para ter uma visualização geral dos dados. Cada ponto representa um filme. O eixo X é a nota do filme e o Y o valor arrecadado.
+O gráfico é interativo, então passando o mouse sobre cada ponto obtem-se mais dados sobre aquele filme.
+
+```{r}
+plot_ly(data = filmes,
+        x = filmes$RATING,
+        y = filmes$`BOX OFFICE`,
+        text = ~paste("Nome do filme: ", TITLE,
+                     "<br>Ano de Lançamento: ", YEAR,
+                     "<br>Papel: ", CREDIT)
+        )
+```
+
+Vendo o gráfico acima, é possível perceber que há uma certa semelhança entra os valores de alguns filmes. Há alguns filmes que tem uma grande semelhança entre a nota e faturamento.
+Com isso, podemos separar os filmes em grupos, onde cada grupo possui filmes com faturamento e nota parecidos.
+Para isso, vamos utilizar um algoritmo que ajuda a calcular esses grupos.
 
 ```{r}
 agrupamento_h_2d = filmes %>% 
