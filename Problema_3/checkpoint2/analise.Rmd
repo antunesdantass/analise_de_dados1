@@ -8,6 +8,8 @@ author: Antunes Dantas
 library(tidyverse)
 ```
 
+
+
 ```{r}
 metadados = read_csv("meta_data7.csv")
 personagens = read_csv("character_list5.csv")
@@ -20,5 +22,8 @@ genero = dados %>% group_by(title, gender) %>%
   summarise(ngender = n()) %>%
   spread(key = gender, value = ngender, fill = 0) %>%
   mutate(proporcao = f/(f+m+`?`))
+
+dados %>%
+  group_by()
 ```
 

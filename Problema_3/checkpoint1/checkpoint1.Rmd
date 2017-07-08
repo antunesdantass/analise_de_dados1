@@ -1,7 +1,9 @@
 ---
 title: "Problema 3 - Checkpoint 1"
 author: "Antunes Dantas"
-output: html_notebook
+output:
+  html_document: default
+  html_notebook: default
 ---
 
 ```{r setup, include=FALSE}
@@ -81,6 +83,7 @@ data.frame(k = NROW(agrupamento_h_2d$height):1,
     labs(x = "Número de clusters produzido", y = "Dissimilaridade na junção")
 ```
 
+Como podemos ver no gráfico de dissimilaridade, 4 é um número de grupos que podemos criar que apresenta uma boa divisão, com grupos de filmes que parecem ter uma semelhança. No gráfico de pontos abaixo, fica mais fácil visualizar os grupos e perceber que separar em quatro grupos nos dá uma boa divisão dos filmes.
 
 ```{r}
 agrupamento_h_2d = filmes %>% 
@@ -97,7 +100,7 @@ filmes2 = filmes %>% mutate(`BOX OFFICE` = log10(`BOX OFFICE`))
 plota_hclusts_2d(agrupamento_h_2d, 
                  filmes2, 
                  c("RATING", "`BOX OFFICE`"), 
-                 linkage_method = "ward.D", ks = 1:6) + scale_y_log10()
+                 linkage_method = "ward.D", ks = 4) + scale_y_log10()
 
 distancias = filmes %>% 
     column_to_rownames("TITLE") %>%
@@ -111,3 +114,8 @@ plot(silhouette(cutree(agrupamento_h_2d, k = 4), distancias))
 
 ```
 
+Podemos nomear os quatro grupos da seguinte maneira: os azuis são os ruins e de baixa arrecadação, os verdes os ruins de arrecadação média, os vermelhos são os bons de arrecadação média e os roxos são os médios de arrecadação alta.
+
+Um exemplo claro de filme do grupo de filmes com qualidade média mas arrecadação alta são os filmes da franquia Star Wars. No grupo dos bons de arrecadação média temos V For Vendetta, um filme de baixo orçamento, porém muito aclamado, possui muitas críticas boas.
+
+Também há nesse mesmo grupo Cisne Negro, um dos papéis mais marcantes na carreira da atriz e que a aclamou como uma grande atriz. É um dos filmes com maior nota.

@@ -176,21 +176,9 @@ $(document).ready(function () {
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5cbmBgYCJ9 -->
-<pre class="r"><code>library(tidyverse)
-</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5gYGAifQ== -->
+<pre class="r"><code>library(tidyverse)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiTG9hZGluZyB0aWR5dmVyc2U6IGdncGxvdDJcbkxvYWRpbmcgdGlkeXZlcnNlOiB0aWJibGVcbkxvYWRpbmcgdGlkeXZlcnNlOiB0aWR5clxuTG9hZGluZyB0aWR5dmVyc2U6IHJlYWRyXG5Mb2FkaW5nIHRpZHl2ZXJzZTogcHVycnJcbkxvYWRpbmcgdGlkeXZlcnNlOiBkcGx5clxuQ29uZmxpY3RzIHdpdGggdGlkeSBwYWNrYWdlcyAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS1cbmZpbHRlcigpOiBkcGx5ciwgc3RhdHNcbmxhZygpOiAgICBkcGx5ciwgc3RhdHNcbiJ9 -->
-<pre><code>Loading tidyverse: ggplot2
-Loading tidyverse: tibble
-Loading tidyverse: tidyr
-Loading tidyverse: readr
-Loading tidyverse: purrr
-Loading tidyverse: dplyr
-Conflicts with tidy packages ---------------------------------------------------------------------------------------------------
-filter(): dplyr, stats
-lag():    dplyr, stats</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
@@ -203,25 +191,22 @@ personagens = read_csv(&quot;character_list5.csv&quot;)</code></pre>
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGFkb3MgPSBtZXRhZGFkb3MgJT4lIGxlZnRfam9pbihwZXJzb25hZ2VucylcbmBgYCJ9 -->
-<pre class="r"><code>dados = metadados %&gt;% left_join(personagens)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGFkb3MgPSBtZXRhZGFkb3MgJT4lIGxlZnRfam9pbihwZXJzb25hZ2VucylcblxuZ2VuZXJvID0gZGFkb3MgJT4lIGdyb3VwX2J5KHRpdGxlLCBnZW5kZXIpICU+JVxuICBzdW1tYXJpc2UobmdlbmRlciA9IG4oKSkgJT4lXG4gIHNwcmVhZChrZXkgPSBnZW5kZXIsIHZhbHVlID0gbmdlbmRlciwgZmlsbCA9IDApICU+JVxuICBtdXRhdGUocHJvcG9yY2FvID0gZi8oZittK2A/YCkpXG5cbmRhZG9zICU+JVxuICBncm91cF9ieSgpXG5gYGAifQ== -->
+<pre class="r"><code>dados = metadados %&gt;% left_join(personagens)
+
+genero = dados %&gt;% group_by(title, gender) %&gt;%
+  summarise(ngender = n()) %&gt;%
+  spread(key = gender, value = ngender, fill = 0) %&gt;%
+  mutate(proporcao = f/(f+m+`?`))
+
+dados %&gt;%
+  group_by()</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiSm9pbmluZywgYnkgPSBcInNjcmlwdF9pZFwiXG4ifQ== -->
-<pre><code>Joining, by = &quot;script_id&quot;</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZ2VuZXJvID0gZGFkb3MgJT4lIGdyb3VwX2J5KHRpdGxlLCBnZW5kZXIpICU+JVxuICBzdW1tYXJpc2UobmdlbmRlciA9IG4oKSlcbnJlc2hhcGUoZ2VuZXJvLCBkaXJlY3Rpb24gPSBcIndpZGVcIiwgaWR2YXIgPSBjKFwiZ2VuZGVyXCIpKVxuYGBgIn0= -->
-<pre class="r"><code>genero = dados %&gt;% group_by(title, gender) %&gt;%
-  summarise(ngender = n())
-reshape(genero, direction = &quot;wide&quot;, idvar = c(&quot;gender&quot;))</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiRXJybzogQ29sdW1uIGB0aW1lYCBub3QgZm91bmRcbiJ9 -->
-<pre><code>Erro: Column `time` not found</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCmF1dGhvcjogQW50dW5lcyBEYW50YXMKLS0tCgpgYGB7cn0KbGlicmFyeSh0aWR5dmVyc2UpCmBgYAoKYGBge3J9Cm1ldGFkYWRvcyA9IHJlYWRfY3N2KCJtZXRhX2RhdGE3LmNzdiIpCnBlcnNvbmFnZW5zID0gcmVhZF9jc3YoImNoYXJhY3Rlcl9saXN0NS5jc3YiKQpgYGAKCmBgYHtyfQpkYWRvcyA9IG1ldGFkYWRvcyAlPiUgbGVmdF9qb2luKHBlcnNvbmFnZW5zKQoKZ2VuZXJvID0gZGFkb3MgJT4lIGdyb3VwX2J5KHRpdGxlLCBnZW5kZXIpICU+JQogIHN1bW1hcmlzZShuZ2VuZGVyID0gbigpKSAlPiUKICBzcHJlYWQoa2V5ID0gZ2VuZGVyLCB2YWx1ZSA9IG5nZW5kZXIsIGZpbGwgPSAwKSAlPiUKICBtdXRhdGUocHJvcG9yY2FvID0gZi8oZittK2A/YCkpCmBgYAoK</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCmF1dGhvcjogQW50dW5lcyBEYW50YXMKLS0tCgpgYGB7cn0KbGlicmFyeSh0aWR5dmVyc2UpCmBgYAoKCgpgYGB7cn0KbWV0YWRhZG9zID0gcmVhZF9jc3YoIm1ldGFfZGF0YTcuY3N2IikKcGVyc29uYWdlbnMgPSByZWFkX2NzdigiY2hhcmFjdGVyX2xpc3Q1LmNzdiIpCmBgYAoKYGBge3J9CmRhZG9zID0gbWV0YWRhZG9zICU+JSBsZWZ0X2pvaW4ocGVyc29uYWdlbnMpCgpnZW5lcm8gPSBkYWRvcyAlPiUgZ3JvdXBfYnkodGl0bGUsIGdlbmRlcikgJT4lCiAgc3VtbWFyaXNlKG5nZW5kZXIgPSBuKCkpICU+JQogIHNwcmVhZChrZXkgPSBnZW5kZXIsIHZhbHVlID0gbmdlbmRlciwgZmlsbCA9IDApICU+JQogIG11dGF0ZShwcm9wb3JjYW8gPSBmLyhmK20rYD9gKSkKCmRhZG9zICU+JQogIGdyb3VwX2J5KCkKYGBgCgo=</div>
 
 
 
