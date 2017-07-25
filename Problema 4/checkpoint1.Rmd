@@ -4,7 +4,8 @@ output: html_notebook
 ---
 
 ```{r, include=FALSE}
-library(tidyverse, warn.conflicts = F)
+library(dplyr, warn.conflicts = F)
+library(readr)
 dados = read_csv("github-users-committing-filetypes.csv")
 ```
 
@@ -32,7 +33,9 @@ As linguagens escolhidas são: Java e Python.
 pyva = dados %>%
   filter(file_extension %in% c("java", "py"))
 
-mutate(pyva,
-       date = paste(toString(the_year), toString(the_month), toString(month_day), sep="-"))
+pyva$date <- paste(pyva$month_day,pyva$the_month, pyva$the_year, sep = "-")
+
+pyva = pyva %>%
+  mutate(weekday = weekdays(as.Date(date,'%d-%m-%Y')))
 ```
 
