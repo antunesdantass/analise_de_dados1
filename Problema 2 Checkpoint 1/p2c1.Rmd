@@ -1,9 +1,6 @@
 ---
 title: "Problema 2 - Checkpoint 1"
 author: "Antunes Dantas"
-output:
-  html_document: default
-  html_notebook: default
 ---
 
 Friends, How I Met Your Mother, Modern Family e The Simpons. Qual dessas séries é a mais bem avaliada no IMDb (serviço onde usuários podem avaliar séries e filmes)?

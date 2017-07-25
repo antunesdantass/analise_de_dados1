@@ -1,0 +1,38 @@
+---
+title: "Problema 4 - Checkpoint 1"
+output: html_notebook
+---
+
+```{r, include=FALSE}
+library(tidyverse, warn.conflicts = F)
+dados = read_csv("github-users-committing-filetypes.csv")
+```
+
+
+O GitHub é uma plataforma online de código-fonte e controle de versão. Nela inúmeros programadores disponibilizam seus projetos de código aberto para que toda a comunidade possa utilizá-los e melhorá-los.
+
+Como deve-se imaginar, esse serviço contém uma grande quantidade de projetos, escrito em diferentes linguagens de programação. Neste trabalho, vamos analisar um pouco o comportamento dos usuários do GitHub. Para isso, foi colhido uma amostra dos dados. Como a quantidade de informação é muito grande, optamos por pegar uma quantidade reduzida para facilitar a análise.
+
+Cada observação no dataset representa o dado de um conjunto de commits em determinado dia do ano. A observação é composta por: Linguagem de Programação (facilmente podemos inferir através da extensão do arquivo), data e número de usuários que deram commit naquela linguagem naquele dia.
+
+As linguagens de programação disponíveis no dataset são:
+
+```{r}
+unique(dados$file_extension) %>%
+  sort()
+```
+
+Como é possível ver, algumas extensões disponíveis no dataset não são de programação. Na nossa análise, levaremos em consideração duas linguagens de programação para responder as seguintes perguntas:
+  1 - Para cada uma delas, há uma diferença significativa na sua popularidade durante a semana e durante o fim de semana? Essa diferença é grande?
+  2 - Existe uma diferença significativa entre as duas linguagens na sua variação de popularidade nos finais de semana?
+  
+As linguagens escolhidas são: Java e Python.
+
+```{r}
+pyva = dados %>%
+  filter(file_extension %in% c("java", "py"))
+
+mutate(pyva,
+       date = paste(toString(the_year), toString(the_month), toString(month_day), sep="-"))
+```
+
