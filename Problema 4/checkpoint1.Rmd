@@ -39,3 +39,43 @@ pyva = pyva %>%
   mutate(weekday = weekdays(as.Date(date,'%d-%m-%Y')))
 ```
 
+Como nossos dados são apenas uma amostra do universo total de commits no github, vamos utilizar uma técnica chamada bootstrapping. O bootstrapping é um método de reamostragem utilizado para aproximar distribuição na amostra de um levantamento estatístico.
+
+```{r}
+amostra = sample(pyva$users, 200)
+
+repeticoes = 4000 # pelo menos 2000, mas mais não faz mal.
+
+exp_com_bootstrap <- function(x){
+  boot_x <- sample(x, size = NROW(x), replace = TRUE) # aqui é o bootstrap
+  return(median(boot_x))
+}
+
+# Agora o input das reamostragens é a amostra!
+experimentos = data_frame(i = 1:repeticoes) %>% 
+  rowwise() %>% 
+  mutate(media_exp = exp_com_bootstrap(amostra)) # <- Aqui!
+
+ggplot(experimentos, aes(x = media_exp)) + 
+  geom_histogram(binwidth = 1, colour = "darkorange", fill = "white")
+summary(experimentos)
+
+# IC com 90%: 
+alpha = .1
+quantile(experimentos$media_exp, 
+         probs = c(.05, .95))
+ci = quantile(experimentos$media_exp, probs = c(alpha/2, 1 - alpha/2))
+
+ggplot(experimentos, aes(x = media_exp)) + 
+  geom_histogram(binwidth = 1, colour = "darkorange", fill = "white") + 
+  geom_vline(aes(xintercept = ci[[1]]), colour = "blue") + 
+  geom_vline(aes(xintercept = ci[[2]]), colour = "blue") + 
+  geom_vline(aes(xintercept = mean(pyva$users)), colour = "green")
+
+# IC com 95%: 
+alpha = .05
+ci = quantile(experimentos$media_exp, 
+              probs = c(alpha/2, 1 - alpha/2))
+
+```
+
