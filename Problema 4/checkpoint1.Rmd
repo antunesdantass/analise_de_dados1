@@ -1,12 +1,15 @@
 ---
 title: "Problema 4 - Checkpoint 1"
-output: html_notebook
+output:
+  html_document: default
+  html_notebook: default
 ---
 
 ```{r, include=FALSE}
 library(dplyr, warn.conflicts = F)
 library(readr)
-dados = read_csv("github-users-committing-filetypes.csv")
+library(resample)
+dados = read.csv("github-users-committing-filetypes.csv")
 ```
 
 
@@ -37,45 +40,63 @@ pyva$date <- paste(pyva$month_day,pyva$the_month, pyva$the_year, sep = "-")
 
 pyva = pyva %>%
   mutate(weekday = weekdays(as.Date(date,'%d-%m-%Y')))
+
+pyva = pyva %>%
+  mutate(isFDS = weekday %in% c("domingo", "sabado"))
+
+pyva.java = pyva %>%
+  filter(file_extension == "java")
+
+pyva.python = pyva %>%
+  filter(file_extension == "py")
 ```
 
 Como nossos dados são apenas uma amostra do universo total de commits no github, vamos utilizar uma técnica chamada bootstrapping. O bootstrapping é um método de reamostragem utilizado para aproximar distribuição na amostra de um levantamento estatístico.
 
 ```{r}
-amostra = sample(pyva$users, 200)
-
-repeticoes = 4000 # pelo menos 2000, mas mais não faz mal.
-
-exp_com_bootstrap <- function(x){
-  boot_x <- sample(x, size = NROW(x), replace = TRUE) # aqui é o bootstrap
-  return(median(boot_x))
-}
-
-# Agora o input das reamostragens é a amostra!
-experimentos = data_frame(i = 1:repeticoes) %>% 
-  rowwise() %>% 
-  mutate(media_exp = exp_com_bootstrap(amostra)) # <- Aqui!
-
-ggplot(experimentos, aes(x = media_exp)) + 
-  geom_histogram(binwidth = 1, colour = "darkorange", fill = "white")
-summary(experimentos)
-
-# IC com 90%: 
-alpha = .1
-quantile(experimentos$media_exp, 
-         probs = c(.05, .95))
-ci = quantile(experimentos$media_exp, probs = c(alpha/2, 1 - alpha/2))
-
-ggplot(experimentos, aes(x = media_exp)) + 
-  geom_histogram(binwidth = 1, colour = "darkorange", fill = "white") + 
-  geom_vline(aes(xintercept = ci[[1]]), colour = "blue") + 
-  geom_vline(aes(xintercept = ci[[2]]), colour = "blue") + 
-  geom_vline(aes(xintercept = mean(pyva$users)), colour = "green")
-
-# IC com 95%: 
-alpha = .05
-ci = quantile(experimentos$media_exp, 
-              probs = c(alpha/2, 1 - alpha/2))
-
+medianas.java <- bootstrap2(pyva.java$users, treatment = pyva.java$isFDS, median,R = 10000)
+medianas.java.ci <- CI.percentile(medianas.java, probs = c(.025, .975))
 ```
 
+```{r}
+medianas.python <- bootstrap2(pyva.python$users, treatment = pyva.python$isFDS, median,R = 10000)
+medianas.python.ci <- CI.percentile(medianas.python, probs = c(.025, .975))
+```
+
+Para responder a primeira questão, vamos analisar o intervalo de confiança das medianas entre o desenvolvimento nas linguagens escolhidas no durante a semana e no final dela.
+
+```{r}
+data.frame(medianas.java.ci) %>% 
+  ggplot(aes(x = "Diferença", ymin = X2.5., ymax = X97.5.)) + 
+  geom_errorbar(width = .2) + 
+  geom_hline(yintercept = 0)
+```
+
+O gráfico acima se refere ao intervalo de confiança do quesito levantado acima para a linguagem Java. Com 95% de certeza (garantidos a partir do bootsrapping), é possível afirmar que o intervalo das medianas é (1248, 1420). Esse é um valor relativamente alto perante os usuários da linguagem Java. Com isso, podemos dizer que há uma relevante diferença entre o uso de Java durante a semana e no final.
+
+Para Python:
+
+```{r}
+data.frame(medianas.python.ci) %>% 
+  ggplot(aes(x = "Diferença", ymin = X2.5., ymax = X97.5.)) + 
+  geom_errorbar(width = .2) + 
+  geom_hline(yintercept = 0)
+```
+
+Já para Python, o intervalo de medianas é (1884, 2112). Assim como no caso anterior, é uma diferença significativa. Menos significativa do que Java, o que pode levar a crer que há usuários que no final de semana gostam de usar Python, mas isso não podemos afirmar.
+
+Para responder a pergunta 2, estamos interessados apenas nos commits realizados no final de semana. Vamos tratar nossos dados para considerar apenas esse subconjunto.
+
+```{r}
+medianas.diff <- bootstrap2(data = (pyva.java %>% filter(isFDS == TRUE))$users, 
+               data2 = (pyva.python %>% filter(isFDS == TRUE))$users,
+               sd)
+medianas.diff.ci = CI.percentile(medianas.diff, probs = c(.025, .975))
+
+data.frame(medianas.diff.ci) %>% 
+  ggplot(aes(x = "Diferença", ymin = X2.5., ymax = X97.5.)) + 
+  geom_errorbar(width = .2) + 
+  geom_hline(yintercept = 0)
+```
+
+Como o intervalo de confiança inclui o 0, não pode-se concluir que existe uma variação nos commits do final de semana entre Python e Java.
