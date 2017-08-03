@@ -1,6 +1,8 @@
 ---
 title: "Problema 4 - Checkpoint 3"
-output: html_notebook
+output:
+  html_document: default
+  html_notebook: default
 ---
 
 ```{r}
@@ -27,7 +29,7 @@ dados = dados %>%
   mutate(weekday = weekdays(as.Date(date,'%d-%m-%Y')))
 
 dados = dados %>%
-  mutate(isFDS = weekday %in% c("Sunday", "Saturday"))
+  mutate(isFDS = weekday %in% c("domingo", "sábado"))
 
 dados.java.dds = dados %>% filter(file_extension == "java") %>% filter(!isFDS)
 dados.cpp.dds = dados %>% filter(file_extension %in% c("cc", "cpp")) %>% filter(!isFDS)
@@ -58,6 +60,18 @@ data.frame(medianas.cpp.dds.ci) %>%
   geom_errorbar(width = .2) + 
   geom_hline(yintercept = 0)
 ```
+
+```{r}
+df <- data.frame(rbind(medianas.java.dds.ci,
+                       medianas.cpp.dds.ci))
+
+df$medida = row.names(df)
+
+df %>%
+  ggplot(aes(x = medida, ymin = X2.5., ymax = X97.5.)) +
+  geom_errorbar(width = .2)
+```
+
 
 Comoé possível ver, temos dois intervalos de confiança que não se sobrepõe, onde o de Java é 3533-3666 e C++ é 1787-1826.
 A partir disso, podemos afirmar com 95% de confiança que Java é mais popular do que C++ durante a semana, o que mostra a força de Java no mercado.
@@ -92,4 +106,114 @@ data.frame(medianas.cpp.fds.ci) %>%
 
 ```
 
+```{r}
+df <- data.frame(rbind(medianas.java.fds.ci,
+                       medianas.cpp.fds.ci))
+
+df$medida = row.names(df)
+
+df %>%
+  ggplot(aes(x = medida, ymin = X2.5., ymax = X97.5.)) +
+  geom_errorbar(width = .2)
+```
+
+
 Mais uma vez, podemos ver pelos gráficos que o intervalo de confiança de Java e C++ não tem interseção, logo há uma diferença considerável entre ambos, com Java mais uma vez sendo mais popular que C++.
+
+A segunda pergunta que vamos responder é: A produtividade dos desenvolvedores é maior na terça, quarta e quinta do que na segunda e sexta?
+
+```{r}
+dados.tqq = dados %>%
+  filter(weekday %in% c("terça", "quarta", "quinta"))
+
+dados.ses = dados %>%
+  filter(weekday %in% c("segunda", "sexta"))
+```
+
+Vamos calcular a mediana da quantidade de commits nesses dois intervalos da semana, aplicando o bootsrapping novamente para aumentar o nível de confiança dos dados.
+
+Para a Terça, Quarta e Quinta, temos a seguinte mediana, com 95% de confiança que este comportamento se reproduz nas estatísticas gerais:
+
+```{r}
+medianas.tqq = bootstrap(dados.tqq$users, median,R = 10000)
+medianas.tqq.ci = CI.percentile(medianas.tqq, probs = c(.025, .975))
+
+data.frame(medianas.tqq.ci) %>% 
+  ggplot(aes(x = "Diferença", ymin = X2.5., ymax = X97.5.)) + 
+  geom_errorbar(width = .2) + 
+  geom_hline(yintercept = 0)
+```
+
+
+Já para a segunda e sexta:
+
+```{r}
+medianas.ses = bootstrap(dados.ses$users, median,R = 10000)
+medianas.ses.ci = CI.percentile(medianas.ses, probs = c(.025, .975))
+
+data.frame(medianas.ses.ci) %>% 
+  ggplot(aes(x = "Diferença", ymin = X2.5., ymax = X97.5.)) + 
+  geom_errorbar(width = .2) + 
+  geom_hline(yintercept = 0)
+```
+
+```{r}
+df <- data.frame(rbind(medianas.tqq.ci,
+                       medianas.ses.ci))
+
+df$medida = row.names(df)
+
+df %>%
+  ggplot(aes(x = medida, ymin = X2.5., ymax = X97.5.)) +
+  geom_errorbar(width = .2)
+```
+
+
+Como o intervalo de confiança de ambos os recortes semanais tem uma grande interseção, não podemos chegar a uma conclusão sobre qual dos dois intervalos possui maior envio de commits, porém podemos garantir que há uma diferença.
+
+A partir disso, podemos nos perguntar: E entre a segunda e sexta? Há uma diferença considerável?
+
+```{r}
+dados.segunda = dados %>%
+  filter(weekday == "segunda")
+
+dados.sexta = dados %>%
+  filter(weekday == "sexta")
+```
+
+Vamos agora calcular a mediana da quantidade de commits nesses dois dias da semana:
+
+```{r}
+medianas.segunda = bootstrap(dados.segunda$users, median,R = 10000)
+medianas.segunda.ci = CI.percentile(medianas.segunda, probs = c(.025, .975))
+
+data.frame(medianas.segunda.ci) %>% 
+  ggplot(aes(x = "Diferença - Segunda-Feira", ymin = X2.5., ymax = X97.5.)) + 
+  geom_errorbar(width = .2) + 
+  geom_hline(yintercept = 0)
+```
+
+```{r}
+medianas.sexta = bootstrap(dados.sexta$users, median,R = 10000)
+medianas.sexta.ci = CI.percentile(medianas.sexta, probs = c(.025, .975))
+
+data.frame(medianas.sexta.ci) %>% 
+  ggplot(aes(x = "Diferença - Sexta-Feira", ymin = X2.5., ymax = X97.5.)) + 
+  geom_errorbar(width = .2) + 
+  geom_hline(yintercept = 0)
+```
+
+Os intervalos da mediana para a segunda e sexta são, respectivamente:
+
+```{r}
+df <- data.frame(rbind(medianas.segunda.ci,
+                       medianas.sexta.ci))
+
+df$medida = row.names(df)
+
+df %>%
+  ggplot(aes(x = medida, ymin = X2.5., ymax = X97.5.)) +
+  geom_errorbar(width = .2)
+```
+
+Como o intervalo possui uma interseção, não podemos afirmar qual dia tem maior produtividade.
