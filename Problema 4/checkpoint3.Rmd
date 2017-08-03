@@ -1,0 +1,95 @@
+---
+title: "Problema 4 - Checkpoint 3"
+output: html_notebook
+---
+
+```{r}
+library(dplyr, warn.conflicts = F)
+library(readr)
+library(resample)
+library(ggplot2)
+dados = read_csv("github-users-committing-filetypes.csv")
+```
+
+
+Continuando a análise anterior, vamos responder mais duas perguntas sobre os dados de commits dos usuários no GitHub.
+
+A primeira pergunta que vamos responder é: Java ou C++ durante a semana?
+
+Essa pergunta pode ajudar a nos mostrar qual dessas duas grandes linguagens OO está mais popular no mercado.
+
+Primeiramento, vamos criar datasets separados para estas duas linguagens.
+
+```{r}
+dados$date <- paste(dados$month_day,dados$the_month, dados$the_year, sep = "-")
+
+dados = dados %>%
+  mutate(weekday = weekdays(as.Date(date,'%d-%m-%Y')))
+
+dados = dados %>%
+  mutate(isFDS = weekday %in% c("Sunday", "Saturday"))
+
+dados.java.dds = dados %>% filter(file_extension == "java") %>% filter(!isFDS)
+dados.cpp.dds = dados %>% filter(file_extension %in% c("cc", "cpp")) %>% filter(!isFDS)
+```
+
+Novamente, como nós estamos trabalhando com uma amostra de dados, vamos aplicar o bootstrapping e calcular o intervalo de confiança.
+
+Para Java, temos o seguinte intervalo de confiança:
+
+```{r}
+medianas.java.dds = bootstrap(dados.java.dds$users, median,R = 10000)
+medianas.java.dds.ci = CI.percentile(medianas.java.dds, probs = c(.025, .975))
+
+data.frame(medianas.java.dds.ci) %>% 
+  ggplot(aes(x = "Diferença", ymin = X2.5., ymax = X97.5.)) + 
+  geom_errorbar(width = .2) + 
+  geom_hline(yintercept = 0)
+```
+
+Já para C++:
+
+```{r}
+medianas.cpp.dds = bootstrap(dados.cpp.dds$users, median,R = 10000)
+medianas.cpp.dds.ci = CI.percentile(medianas.cpp.dds, probs = c(.025, .975))
+
+data.frame(medianas.cpp.dds.ci) %>% 
+  ggplot(aes(x = "Diferença", ymin = X2.5., ymax = X97.5.)) + 
+  geom_errorbar(width = .2) + 
+  geom_hline(yintercept = 0)
+```
+
+Comoé possível ver, temos dois intervalos de confiança que não se sobrepõe, onde o de Java é 3533-3666 e C++ é 1787-1826.
+A partir disso, podemos afirmar com 95% de confiança que Java é mais popular do que C++ durante a semana, o que mostra a força de Java no mercado.
+
+Podemos extender um pouco a pergunta e passar pro final de semana. Será que o comportamento se equipara e temos Java como a mais popular das duas no final de semana também?
+
+Para Java:
+
+```{r}
+dados.java.fds = dados %>% filter(file_extension == "java") %>% filter(isFDS)
+dados.cpp.fds = dados %>% filter(file_extension %in% c("cc", "cpp")) %>% filter(isFDS)
+
+medianas.java.fds = bootstrap(dados.java.fds$users, median,R = 10000)
+medianas.java.fds.ci = CI.percentile(medianas.java.fds, probs = c(.025, .975))
+
+data.frame(medianas.java.fds.ci) %>% 
+  ggplot(aes(x = "Diferença", ymin = X2.5., ymax = X97.5.)) + 
+  geom_errorbar(width = .2) + 
+  geom_hline(yintercept = 0)
+```
+
+Para C++:
+
+```{r}
+medianas.cpp.fds = bootstrap(dados.cpp.fds$users, median,R = 10000)
+medianas.cpp.fds.ci = CI.percentile(medianas.cpp.fds, probs = c(.025, .975))
+
+data.frame(medianas.cpp.fds.ci) %>% 
+  ggplot(aes(x = "Diferença", ymin = X2.5., ymax = X97.5.)) + 
+  geom_errorbar(width = .2) + 
+  geom_hline(yintercept = 0)
+
+```
+
+Mais uma vez, podemos ver pelos gráficos que o intervalo de confiança de Java e C++ não tem interseção, logo há uma diferença considerável entre ambos, com Java mais uma vez sendo mais popular que C++.
