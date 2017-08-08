@@ -1,0 +1,86 @@
+---
+title: "Problema 4 - Checkpoint 4"
+output: html_notebook
+---
+
+```{r}
+library(dplyr, warn.conflicts = F)
+library(readr)
+library(resample)
+library(ggplot2)
+dados = read_csv("github-users-committing-filetypes.csv")
+```
+
+Esta análise continua com os mesmos dados das duas anteriores, porém desta vez vamos utilizar uma técnica chamada teste de hipótese. Teste de hipóteses é um procedimento que permite tomar uma decisão entre duas ou mais hipóteses ou hipótese alternativa, utilizando os dados observados de um determinado experimento.
+
+Hipótese nula é a hipótese assumida como verdadeira para a construção do teste. É a teoria, o efeito ou a alternativa que se está interessado em testar.
+
+Para comparar os resultados obtivos com intervalo de confiança e hipótese nula, vamos refazer duas análises anteriores e comparar o resultado do IC e da Hipótese Nula.
+
+Pergunta 1: Java ou C++ durante a semana?
+
+Essa pergunta pode ajudar a nos mostrar qual dessas duas grandes linguagens OO está mais popular no mercado.
+
+Primeiramento, vamos criar datasets separados para estas duas linguagens.
+
+```{r}
+dados$date <- paste(dados$month_day,dados$the_month, dados$the_year, sep = "-")
+
+dados = dados %>%
+  mutate(weekday = weekdays(as.Date(date,'%d-%m-%Y')))
+
+dados = dados %>%
+  mutate(isFDS = weekday %in% c("domingo", "sábado"))
+
+dados.java.dds = dados %>% filter(file_extension == "java") %>% filter(!isFDS)
+dados.cpp.dds = dados %>% filter(file_extension %in% c("cc", "cpp")) %>% filter(!isFDS)
+```
+
+Novamente, como nós estamos trabalhando com uma amostra de dados, vamos aplicar o bootstrapping e calcular o intervalo de confiança.
+
+Para Java, temos o seguinte intervalo de confiança:
+
+```{r}
+medianas.java.dds = bootstrap(dados.java.dds$users, median,R = 10000)
+medianas.java.dds.ci = CI.percentile(medianas.java.dds, probs = c(.025, .975))
+
+data.frame(medianas.java.dds.ci) %>% 
+  ggplot(aes(x = "Diferença", ymin = X2.5., ymax = X97.5.)) + 
+  geom_errorbar(width = .2) + 
+  geom_hline(yintercept = 0)
+```
+
+Já para C++:
+
+```{r}
+medianas.cpp.dds = bootstrap(dados.cpp.dds$users, median,R = 10000)
+medianas.cpp.dds.ci = CI.percentile(medianas.cpp.dds, probs = c(.025, .975))
+
+data.frame(medianas.cpp.dds.ci) %>% 
+  ggplot(aes(x = "Diferença", ymin = X2.5., ymax = X97.5.)) + 
+  geom_errorbar(width = .2) + 
+  geom_hline(yintercept = 0)
+```
+
+```{r}
+df <- data.frame(rbind(medianas.java.dds.ci,
+                       medianas.cpp.dds.ci))
+
+df$medida = row.names(df)
+
+df %>%
+  ggplot(aes(x = medida, ymin = X2.5., ymax = X97.5.)) +
+  geom_errorbar(width = .2)
+```
+
+
+Comoé possível ver, temos dois intervalos de confiança que não se sobrepõe, onde o de Java é 3533-3666 e C++ é 1787-1826.
+A partir disso, podemos afirmar com 95% de confiança que Java é mais popular do que C++ durante a semana, o que mostra a força de Java no mercado.
+
+Já com a Hipótese Nula:
+
+```{r}
+dados.p <- dados.extr %>%
+  select(c(isEXT, total))
+```
+
